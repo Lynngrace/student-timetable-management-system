@@ -1,0 +1,93 @@
+<!doctype html>
+<html>
+<!--head-->
+<% include ./partials/head.ejs %>
+<body>
+<!--js scripts-->
+<script type="text/javascript">
+    // allow only number input
+    function isNumber(evt)
+    {
+        evt = (evt) ? evt : window.event
+        var charCode = (evt.which) ? evt.which : evt.keyCode
+        return !(charCode > 31 && (charCode < 48 || charCode > 57))
+
+    }
+
+    function filter()
+    {
+        var input, filter, table, tr, td, i
+        input = document.getElementById('filter')
+        filter = input.value.toUpperCase()
+        table = document.getElementById('table')
+        tr = table.getElementsByTagName('tr')
+        for(i = 0; i < tr.length; i++)
+        {
+            td = tr[i].getElementsByTagName('td')[0]
+            if(td)
+                if(td.innerHTML.toUpperCase().indexOf(filter) > -1)
+                    tr[i].style.display = ''
+                else
+                    tr[i].style.display = 'none'
+        }
+    }
+</script>
+
+<!--navbar-->
+<% include ./partials/navbar.ejs %>
+
+<!--main container-->w
+<div class="w3-container w3-padding-64 w3-third w3-display-topmiddle" id="container">
+    <!--flash message-->
+    <% include ./partials/flash_message.ejs %>
+
+    <!--form-->
+    <form action="/add_room" method="post"
+          class="w3-container w3-padding w3-light-grey w3-round w3-border w3-card-4" id="form">
+        <h2>Add Room</h2>
+
+        <label>Room Name<span class="w3-text-red">*</span></label>
+        <label>
+            <input type="text" class="w3-input w3-border w3-round" name="name" required maxlength="10" minlength="4">
+        </label>
+
+        <label>Capacity<span class="w3-text-red">*</span></label>
+        <label>
+            <input type="number" class="w3-input w3-border w3-round" name="capacity" required
+                   onkeypress="return isNumber(event)" min="20" max="1000">
+        </label>
+
+        <br>
+
+        <button type="submit" class="w3-btn w3-round w3-blue">Add Room</button>
+    </form>
+
+    <br>
+
+    <h2>Existing Rooms</h2>
+
+    <input class="w3-input w3-margin-bottom w3-animate-input" type="text" placeholder="Filter Rooms"
+           id="filter" onkeyup="filter()" style="width: 30%">
+
+    <div class="w3-responsive">
+        <table class="w3-table w3-bordered w3-hoverable" id="table">
+            <tr>
+                <th class="w3-border-right">Name</th>
+                <th>Capacity</th>
+            </tr>
+            <%
+            for(var i = 0; i < rooms.length; i++)
+            {
+                var curRoom = rooms[i] %>
+                <tr>
+                    <td class="w3-border-right"><%= curRoom.name %></td>
+                    <td><%= curRoom.capacity %></td>
+                </tr>
+            <%
+            }
+            %>
+        </table>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,56 @@
+<script>
+    function showDropdown()
+    {
+        var x = document.getElementById('dropdown')
+        if(x.className.indexOf('w3-show') === -1)
+            x.className += ' w3-show'
+        else
+            x.className = x.className.replace(' w3-show', '')
+
+    }
+
+    window.onload = function()
+    {
+        var navbar = document.getElementById('navbar')
+        var container = document.getElementById('container')
+        container.style.marginTop = (navbar.clientHeight - 25).toString() + 'px'
+    }
+</script>
+
+<header>
+    <div class="w3-top" id="navbar">
+        <div class="w3-bar w3-border-bottom w3-white w3-card">
+            <a href="/" class="w3-bar-item w3-button" title="Home"><i class="fa fa-home"></i></a>
+
+            <% if(user.type === 'po') { %>
+            <div class="w3-dropdown-click">
+                <div class="w3-button" onclick="showDropdown()" title="Options"><i class="fa fa-bars"></i></div>
+
+                <div id="dropdown" class="w3-dropdown-content w3-bar-block w3-card-4">
+                    <a href="/add_course" class="w3-bar-item w3-button">Add Course</a>
+
+                    <a href="/add_stream" class="w3-bar-item w3-button">Add Batch & Stream</a>
+
+                    <a href="/add_subject" class="w3-bar-item w3-button">Add Subject</a>
+
+                    <a href="/view_subjects" class="w3-bar-item w3-button">View Subjects</a>
+
+                    <a href="/add_room" class="w3-bar-item w3-button">Add Room</a>
+                </div>
+            </div>
+            <% } else if(user.type === 'faculty') { %>
+            <div class="w3-dropdown-click">
+                <button class="w3-button" onclick="showDropdown()"><i class="fa fa-bars"></i></button>
+
+                <div id="dropdown" class="w3-dropdown-content w3-bar-block w3-card-4">
+                    <a href="/my_subjects" class="w3-bar-item w3-button">My Subjects</a>
+                </div>
+            </div>
+            <% } %>
+
+            <a href="/logout" class="w3-bar-item w3-button w3-right" title="Logout"><i class="fa fa-sign-out"></i></a>
+
+            <span class="w3-bar-item w3-right"><i class="fa fa-user"></i> <%= user.name %></span>
+        </div>
+    </div>
+</header>

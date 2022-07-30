@@ -1,0 +1,50 @@
+<!doctype html>
+<html>
+<!--head-->
+<% include ./partials/head.ejs %>
+<body>
+
+<!--navbar-->
+<% include ./partials/navbar.ejs %>
+
+<!--main container-->
+<div class="w3-container w3-padding-64 w3-third w3-display-topmiddle" id="container">
+    <!--flash message-->
+    <% include ./partials/flash_message.ejs %>
+
+    <!--form-->
+    <form action="/add_course" method="post"
+          class="w3-container w3-padding w3-light-grey w3-round w3-border w3-card-4" id="form">
+        <h2>Add Course</h2>
+
+        <label>Name<span class="w3-text-red">*</span></label>
+        <label>
+            <input type="text" class="w3-input w3-border w3-round" name="name" required maxlength="10" minlength="2">
+        </label>
+
+        <br>
+
+        <button type="submit" class="w3-btn w3-round w3-blue">Add Course</button>
+    </form>
+
+    <br>
+
+    <h2>Existing Courses</h2>
+
+    <div class="w3-responsive">
+        <table class="w3-table w3-bordered w3-hoverable">
+            <%
+            for(var i = 0; i < courses.length; i++)
+            {
+            %>
+                <tr>
+                    <td><%= courses[i].name %></td>
+                </tr>
+            <%
+            }
+            %>
+        </table>
+    </div>
+</div>
+</body>
+</html>

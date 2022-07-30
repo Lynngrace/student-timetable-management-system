@@ -1,0 +1,134 @@
+<!doctype html>
+<html>
+<head>
+    <title>BMU : <%= title %></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+</head>
+<body>
+<!--js scripts-->
+<script type="text/javascript">
+    function updateBatch()
+    {
+        $('#batch').find('option').remove()
+
+        var xhttp = new XMLHttpRequest()
+        xhttp.onreadystatechange = function()
+        {
+            if (this.readyState === 4 && this.status === 200)
+            {
+                var batches = JSON.parse(this.response)
+
+                $('#batch').append('<option value=""></option>');
+                for(var i = 0; i < batches.length; i++)
+                    $('#batch').append('<option value="' + batches[i].batch + '">' + batches[i].batch + '</option>');
+            }
+        }
+        var cid = document.getElementById('cid')
+        cid = cid.options[cid.selectedIndex].value
+        xhttp.open("GET", "/get_batches?cid=" + cid.toString(), true)
+        xhttp.send()
+    }
+
+    function updateStream()
+    {
+        var div = document.getElementById('streamdiv')
+        div.style.display = 'none'
+        $('#streamid').find('option').remove()
+        var streamid = document.getElementById('streamid')
+        streamid.required = false;
+
+        var xhttp = new XMLHttpRequest()
+        xhttp.onreadystatechange = function()
+        {
+            if (this.readyState === 4 && this.status === 200)
+            {
+                streamid.required = true
+
+                var streams = JSON.parse(this.response)
+
+                if(streams.length > 0)
+                {
+                    div.style.display = 'block'
+
+                    for(var i = 0; i < streams.length; i++)
+                        $('#streamid').append('<option value="' + streams[i].streamid + '">' + streams[i].name + '</option>')
+                }
+            }
+        }
+        var cid = document.getElementById('cid')
+        cid = cid.options[cid.selectedIndex].value
+        var batch = document.getElementById('batch')
+        batch = batch.options[batch.selectedIndex].value
+        xhttp.open("GET", "/get_streams?cid=" + cid.toString() + "&batch=" + batch, true)
+        xhttp.send()
+    }
+</script>
+
+<!--navbar-->
+<% include ./partials/navbar.ejs %>
+
+<!--main container-->
+<div class="w3-container w3-padding-64 w3-third w3-display-topmiddle" id="container">
+    <!--flash message-->
+    <% include ./partials/flash_message.ejs %>
+
+    <!--form-->
+    <form action="/add_subject" method="post"
+          class="w3-container w3-padding w3-light-grey w3-round w3-border w3-card-4" id="form">
+        <h2>Add Subject</h2>
+
+        <label>Full Subject Name<span class="w3-text-red">*</span></label>
+        <label>
+            <input type="text" class="w3-input w3-border w3-round" name="name" required maxlength="255" minlength="5">
+        </label>
+
+        <label>Abbreviated Subject Name<span class="w3-text-red">*</span></label>
+        <label>
+            <input type="text" class="w3-input w3-border w3-round" name="abbrev" required maxlength="10" minlength="2">
+        </label>
+
+        <label>Lectures Per Week<span class="w3-text-red">*</span></label>
+        <label>
+            <input type="number" class="w3-input w3-border w3-round" name="lec_per_week" required
+                   onkeypress="return isNumber(event)" min="1" max="5">
+        </label>
+
+        <label>Course<span class="w3-text-red">*</span></label>
+        <label>
+            <select class="w3-select w3-border w3-round" required name="cid" id="cid" onchange="updateBatch()">
+                <option value=""></option>
+                <%
+                for(var i = 0; i < courses.length; i++)
+                {
+                %>
+                    <option value=<%= courses[i].cid %>><%= courses[i].name %></option>
+                <%
+                }
+                %>
+            </select>
+        </label>
+
+        <label>Batch<span class="w3-text-red">*</span></label>
+        <label>
+            <select class="w3-select w3-border w3-round" required name="batch" id="batch" onchange="updateStream()">
+            </select>
+        </label>
+
+        <div id="streamdiv" style="display: none">
+            <label>Stream<span class="w3-text-red">*</span></label>
+            <label>
+                <select class="w3-select w3-border w3-round" name="streamid" id="streamid">
+                </select>
+            </label>
+        </div>
+
+        <br><br>
+
+        <button type="submit" class="w3-btn w3-round w3-blue">Add Subject</button>
+    </form>
+</div>
+</body>
+</html>

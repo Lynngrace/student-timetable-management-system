@@ -1,0 +1,110 @@
+<!doctype html>
+<html>
+<!--head-->
+<% include ./partials/head.ejs %>
+<body>
+<!--js scripts-->
+<script type="text/javascript">
+    // allow only number input
+    function isNumber(evt)
+    {
+        evt = (evt) ? evt : window.event
+        var charCode = (evt.which) ? evt.which : evt.keyCode
+        return !(charCode > 31 && (charCode < 48 || charCode > 57))
+
+    }
+
+    function filter()
+    {
+        var input, filter, table, tr, td, i
+        input = document.getElementById('filter')
+        filter = input.value.toUpperCase()
+        table = document.getElementById('table')
+        tr = table.getElementsByTagName('tr')
+        for(i = 0; i < tr.length; i++)
+        {
+            td = tr[i].getElementsByTagName('td')[0]
+            if(td)
+                if(td.innerHTML.toUpperCase().indexOf(filter) > -1)
+                    tr[i].style.display = ''
+                else
+                    tr[i].style.display = 'none'
+        }
+    }
+</script>
+
+<!--navbar-->
+<% include ./partials/navbar.ejs %>
+
+<!--main container-->
+<div class="w3-container w3-padding-64 w3-third w3-display-topmiddle" id="container">
+    <!--flash message-->
+    <% include ./partials/flash_message.ejs %>
+
+    <!--form-->
+    <form action="/add_stream" method="post"
+          class="w3-container w3-padding w3-light-grey w3-round w3-border w3-card-4" id="form">
+        <h2>Add Stream</h2>
+
+        <label>Name (Leave Blank if N/A)</label>
+        <label>
+            <input type="text" class="w3-input w3-border w3-round" name="name">
+        </label>
+
+        <label>Batch<span class="w3-text-red">*</span></label>
+        <label>
+            <input type="number" class="w3-input w3-border w3-round" name="batch" required
+                   onkeypress="return isNumber(event)" min="" max="" id="batch">
+        </label>
+
+        <label>Course<span class="w3-text-red">*</span></label>
+        <label>
+            <select class="w3-select w3-border w3-round" required name="cid">
+                <option value=""></option>
+                <%
+                for(var i = 0; i < courses.length; i++)
+                {
+                %>
+                    <option value=<%= courses[i].cid %>><%= courses[i].name %></option>
+                <%
+                }
+                %>
+            </select>
+        </label>
+
+        <br><br>
+
+        <button type="submit" class="w3-btn w3-round w3-blue">Add Stream</button>
+    </form>
+
+    <br>
+
+    <h2>Existing Streams</h2>
+
+    <input class="w3-input w3-margin-bottom w3-animate-input" type="text" placeholder="Filter Streams"
+           id="filter" onkeyup="filter()" style="width: 30%">
+
+    <div class="w3-responsive">
+        <table class="w3-table w3-bordered w3-hoverable" id="table">
+            <tr>
+                <th class="w3-border-right">Name</th>
+                <th class="w3-border-right">Batch</th>
+                <th>Course</th>
+            </tr>
+            <%
+            for(i = 0; i < streams.length; i++)
+            {
+                var curStream = streams[i] %>
+                <tr>
+                    <td class="w3-border-right"><%= curStream.stream %></td>
+                    <td class="w3-border-right"><%= curStream.batch %></td>
+                    <td><%= curStream.course %></td>
+                </tr>
+            <%
+            }
+            %>
+        </table>
+    </div>
+</div>
+</body>
+</html>

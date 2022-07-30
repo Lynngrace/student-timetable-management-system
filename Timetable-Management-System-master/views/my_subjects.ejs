@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<!--head-->
+<% include ./partials/head.ejs %>
+<body>
+<!--navbar-->
+<% include ./partials/navbar.ejs %>
+
+<!--main container-->
+<div class="w3-container w3-padding-64 w3-display-topmiddle" id="container" style="display: inline-block">
+    <div class="w3-responsive">
+        <table class="w3-table w3-bordered w3-hoverable">
+            <tr>
+                <th class="w3-border-right">Subject</th>
+                <th class="w3-border-right">Batch</th>
+                <th class="w3-border-right">Course</th>
+                <th>Stream(s)</th>
+            </tr>
+            <%
+            for(var i = 0; i < subjects.length; i++)
+            {
+                var curSub = subjects[i] %>
+                <tr>
+                    <td class="w3-border-right"><%= curSub.subject_name %></td>
+                    <td class="w3-border-right"><%= curSub.batch %></td>
+                    <td class="w3-border-right"><%= curSub.course %></td>
+                    <td><%= curSub.streams %></td>
+            </tr>
+            <%
+            }
+            %>
+        </table>
+    </div>
+</div>
+</body>
+</html>
